@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Quản lý nghỉ phép</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="mobile-menu-toggle no-print" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-mini">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="brand">
+                <h1>LEAVE<span>PRO</span> <small>• Nhân viên</small></h1>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn btn-secondary no-print" onclick="window.print()">
+                <i class="fas fa-print"></i>
+            </button>
+            
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Nguyễn Văn A</div>
+                    <div class="user-role" id="userRole">Nhân viên</div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Hồ sơ cá nhân</span>
+            </div>
+            <div class="dropdown-item">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Layout -->
+    <div class="main-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <div class="profile-info">
+                        <h3 id="profileName">Nguyễn Văn A</h3>
+                        <p id="profileRole">Kế toán • Nhân viên</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-title">Chính</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#dashboard" class="nav-link active" data-tab="dashboard">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span>Tổng quan</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#leave" class="nav-link" data-tab="leave">
+                                <i class="fas fa-calendar-plus nav-icon"></i>
+                                <span>Đăng ký nghỉ phép</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#history" class="nav-link" data-tab="history">
+                                <i class="fas fa-history nav-icon"></i>
+                                <span>Lịch sử đơn</span>
+                                <span class="nav-badge" id="historyBadge">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-title">Cá nhân</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#profile" class="nav-link" data-tab="profile">
+                                <i class="fas fa-user-circle nav-icon"></i>
+                                <span>Hồ sơ</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#documents" class="nav-link" data-tab="documents">
+                                <i class="fas fa-file-alt nav-icon"></i>
+                                <span>Tài liệu</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#settings" class="nav-link" data-tab="settings">
+                                <i class="fas fa-cog nav-icon"></i>
+                                <span>Cài đặt</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-title">Hỗ trợ</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#help" class="nav-link" data-tab="help">
+                                <i class="fas fa-question-circle nav-icon"></i>
+                                <span>Trợ giúp</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact" class="nav-link" data-tab="contact">
+                                <i class="fas fa-headset nav-icon"></i>
+                                <span>Liên hệ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>Hệ thống hoạt động ổn định</span>
+                </div>
+                <div class="version">v2.0.1</div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content active">
+                <div class="content-header">
+                    <h1 class="content-title">Xin chào, <span id="greetingName">Nguyễn Văn A</span>!</h1>
+                    <p class="content-subtitle">Hôm nay là <span id="currentDate">Thứ Hai, 15/01/2024</span></p>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+2</div>
+                        </div>
+                        <div class="stat-value" id="total-leave">5</div>
+                        <div class="stat-label">Tổng ngày nghỉ trong tháng</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-trend trend-down">-1</div>
+                        </div>
+                        <div class="stat-value" id="pending-requests">2</div>
+                        <div class="stat-label">Đơn chờ duyệt</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-trend trend-up">+3</div>
+                        </div>
+                        <div class="stat-value" id="approved-requests">8</div>
+                        <div class="stat-label">Đơn đã duyệt</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <span class="stat-trend trend-neutral">0</span>
+                        </div>
+                        <div class="stat-value" id="remaining-days">15</div>
+                        <div class="stat-label">Ngày phép còn lại</div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Thao tác nhanh</h2>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="showTab('leave')">
+                            <div class="action-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <span>Đăng ký nghỉ mới</span>
+                        </button>
+                        
+                        <button class="quick-action-btn" onclick="showTab('history')">
+                            <div class="action-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <span>Xem lịch sử đơn</span>
+                        </button>
+                        
+                        <button class="quick-action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <span>Tải báo cáo</span>
+                        </button>
+                        
+                        <button class="quick-action-btn" onclick="showTab('profile')">
+                            <div class="action-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <span>Cập nhật hồ sơ</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recent Requests -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Đơn gần đây</h2>
+                        <a href="#history" class="btn btn-secondary btn-sm" onclick="showTab('history')">
+                            Xem tất cả <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table" id="recentTable">
+                            <thead>
+                                <tr>
+                                    <th>Ngày gửi</th>
+                                    <th>Loại nghỉ</th>
+                                    <th>Thời gian</th>
+                                    <th>Số ngày</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentBody">
+                                <!-- Dữ liệu sẽ được load từ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Leave Request Tab -->
+            <div id="leaveTab" class="tab-content">
+                <div class="content-header">
+                    <h1 class="content-title">Đăng ký nghỉ phép</h1>
+                    <p class="content-subtitle">Điền đầy đủ thông tin để gửi đơn xin nghỉ</p>
+                </div>
+                
+                <div class="content-card">
+                    <form id="leaveForm" class="leave-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="leaveType"><i class="fas fa-list"></i> Loại nghỉ phép *</label>
+                                <select id="leaveType" class="form-control" required>
+                                    <option value="">-- Chọn loại nghỉ --</option>
+                                    <option value="nghiphep">Nghỉ phép năm</option>
+                                    <option value="nghiom">Nghỉ ốm</option>
+                                    <option value="nghiviecthang">Nghỉ việc riêng có lương</option>
+                                    <option value="nghikhongluong">Nghỉ không lương</option>
+                                    <option value="nghicuoituan">Nghỉ cuối tuần</option>
+                                    <option value="nghile">Nghỉ lễ</option>
+                                    <option value="nghithaisan">Nghỉ thai sản</option>
+                                    <option value="nghiketHon">Nghỉ kết hôn</option>
+                                    <option value="nghitang">Nghỉ tang chế</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="startDate"><i class="fas fa-calendar-day"></i> Ngày bắt đầu *</label>
+                                <input type="date" id="startDate" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="endDate"><i class="fas fa-calendar-check"></i> Ngày kết thúc *</label>
+                                <input type="date" id="endDate" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="totalDays"><i class="fas fa-calculator"></i> Số ngày nghỉ</label>
+                                <input type="number" id="totalDays" class="form-control" readonly>
+                                <small class="form-text">Tự động tính dựa trên ngày bắt đầu/kết thúc</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactInfo"><i class="fas fa-phone"></i> Số điện thoại liên lạc *</label>
+                                <input type="tel" id="contactInfo" class="form-control" required 
+                                       placeholder="Số điện thoại khi nghỉ">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reason"><i class="fas fa-comment-alt"></i> Lý do nghỉ *</label>
+                            <textarea id="reason" class="form-control" rows="4" 
+                                      placeholder="Mô tả chi tiết lý do nghỉ phép..." required></textarea>
+                            <small class="form-text">Vui lòng mô tả rõ ràng lý do nghỉ phép</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-paperclip"></i> Tệp đính kèm (nếu có)</label>
+                            <div class="file-upload">
+                                <input type="file" id="attachment" class="file-input" 
+                                       accept=".pdf,.jpg,.png,.doc,.docx">
+                                <label for="attachment" class="file-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Kéo thả hoặc nhấn để tải lên</span>
+                                    <small>Hỗ trợ: PDF, JPG, PNG, DOC (Tối đa 10MB)</small>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> Nhập lại
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Gửi đơn đăng ký
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Leave Policies -->
+                <div class="content-card">
+                    <h3 class="card-title"><i class="fas fa-info-circle"></i> Quy định nghỉ phép</h3>
+                    <div class="policies-list">
+                        <div class="policy-item">
+                            <i class="fas fa-check-circle policy-icon"></i>
+                            <div class="policy-content">
+                                <h4>Nghỉ phép năm</h4>
+                                <p>12 ngày/năm, có thể tích lũy tối đa 2 năm</p>
+                            </div>
+                        </div>
+                        <div class="policy-item">
+                            <i class="fas fa-check-circle policy-icon"></i>
+                            <div class="policy-content">
+                                <h4>Nghỉ ốm</h4>
+                                <p>Yêu cầu giấy khám bệnh cho nghỉ từ 3 ngày trở lên</p>
+                            </div>
+                        </div>
+                        <div class="policy-item">
+                            <i class="fas fa-check-circle policy-icon"></i>
+                            <div class="policy-content">
+                                <h4>Nghỉ việc riêng</h4>
+                                <p>Tối đa 5 ngày/năm, có lương</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- History Tab -->
+            <div id="historyTab" class="tab-content">
+                <div class="content-header">
+                    <h1 class="content-title">Lịch sử đơn nghỉ phép</h1>
+                    <p class="content-subtitle">Theo dõi và quản lý các đơn đã gửi</p>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filterStatus">Trạng thái</label>
+                        <select id="filterStatus" class="form-control" onchange="applyFilters()">
+                            <option value="">Tất cả</option>
+                            <option value="pending">Chờ duyệt</option>
+                            <option value="approved">Đã duyệt</option>
+                            <option value="rejected">Từ chối</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filterMonth">Tháng</label>
+                        <input type="month" id="filterMonth" class="form-control" onchange="applyFilters()">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filterType">Loại nghỉ</label>
+                        <select id="filterType" class="form-control" onchange="applyFilters()">
+                            <option value="">Tất cả</option>
+                            <option value="nghiphep">Nghỉ phép năm</option>
+                            <option value="nghiom">Nghỉ ốm</option>
+                            <option value="nghiviecthang">Nghỉ việc riêng</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="searchInput">Tìm kiếm</label>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Tìm theo lý do...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" onclick="resetFilters()">
+                        <i class="fas fa-filter"></i> Xóa bộ lọc
+                    </button>
+                </div>
+                
+                <!-- History Table -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Danh sách đơn</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="exportToExcel('history')">
+                                <i class="fas fa-file-excel"></i> Xuất Excel
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                                <i class="fas fa-print"></i> In
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã đơn</th>
+                                    <th>Loại nghỉ</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Số ngày</th>
+                                    <th>Lý do</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người duyệt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody">
+                                <!-- Dữ liệu sẽ được load từ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination-wrapper">
+                        <div class="page-info" id="pageInfo">
+                            Hiển thị 1-10 của 50
+                        </div>
+                        <div class="pagination" id="pagination">
+                            <!-- Pagination sẽ được tạo bởi JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other tabs (Profile, Documents, Settings, Help, Contact) -->
+            <!-- ... Các tab khác sẽ được triển khai tương tự ... -->
+            
+        </main>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('vi-VN', options);
+            
+            // Set greeting based on time
+            const hour = now.getHours();
+            let greeting = 'Chào buổi sáng';
+            if (hour >= 12 && hour < 18) greeting = 'Chào buổi chiều';
+            if (hour >= 18) greeting = 'Chào buổi tối';
+            document.getElementById('greetingName').textContent = greeting;
+            
+            // Initialize date inputs
+            const today = now.toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+            
+            // Load initial data
+            loadRecentRequests();
+        });
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+        
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const tab = document.getElementById(tabId + 'Tab');
+            if (tab) {
+                tab.classList.add('active');
+            }
+            
+            // Activate corresponding nav link
+            const navLink = document.querySelector(`[data-tab="${tabId}"]`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+            
+            // Load tab data
+            switch(tabId) {
+                case 'history':
+                    loadLeaveHistory();
+                    break;
+                case 'dashboard':
+                    loadRecentRequests();
+                    break;
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+        
+        async function loadRecentRequests() {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getRecentRequests',
+                        userId: currentUser?.id,
+                        limit: 5
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const tbody = document.getElementById('recentBody');
+                    tbody.innerHTML = result.data.map(item => `
+                        <tr>
+                            <td>${Utils.formatDate(item.submitDate)}</td>
+                            <td>${item.leaveType}</td>
+                            <td>
+                                ${Utils.formatDate(item.startDate)}<br>
+                                <small>đến ${Utils.formatDate(item.endDate)}</small>
+                            </td>
+                            <td>${item.totalDays} ngày</td>
+                            <td>
+                                <span class="status-badge badge-${getStatusClass(item.status)}">
+                                    ${getStatusText(item.status)}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewRequestDetails('${item.requestId || item.id}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Lỗi load đơn gần đây:', error);
+            }
+        }
+        
+        function applyFilters() {
+            const filters = {
+                status: document.getElementById('filterStatus').value,
+                month: document.getElementById('filterMonth').value,
+                type: document.getElementById('filterType').value,
+                search: document.getElementById('searchInput').value
+            };
+            
+            // Load data với filters
+            loadLeaveHistory(filters);
+        }
+        
+        function resetFilters() {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('searchInput').value = '';
+            
+            loadLeaveHistory();
+        }
+        
+        // Close user dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                const dropdown = document.getElementById('userDropdown');
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

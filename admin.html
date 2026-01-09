@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý - Duyệt đơn nghỉ phép</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <i class="fas fa-user-shield"></i>
+                <h1>QUẢN LÝ DUYỆT ĐƠN NGHỈ PHÉP</h1>
+            </div>
+            <div class="header-right">
+                <span id="adminInfo"></span>
+                <div class="admin-actions">
+                    <button onclick="exportToExcel()" class="btn-export">
+                        <i class="fas fa-file-excel"></i> Xuất Excel
+                    </button>
+                    <button onclick="showSalarySection()" class="btn-salary">
+                        <i class="fas fa-money-bill-wave"></i> Quản lý lương
+                    </button>
+                    <button onclick="logout()" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="admin-container">
+            <!-- Sidebar quản lý -->
+            <div class="admin-sidebar">
+                <div class="admin-profile">
+                    <i class="fas fa-user-tie"></i>
+                    <h3 id="adminName"></h3>
+                    <p>Quản lý cấp cao</p>
+                </div>
+                
+                <nav class="admin-nav">
+                    <a href="#" class="admin-nav-item active" onclick="showAdminSection('pending')">
+                        <i class="fas fa-clock"></i> Đơn chờ duyệt
+                        <span id="pendingCount" class="badge">0</span>
+                    </a>
+                    <a href="#" class="admin-nav-item" onclick="showAdminSection('all')">
+                        <i class="fas fa-list"></i> Tất cả đơn
+                    </a>
+                    <a href="#" class="admin-nav-item" onclick="showAdminSection('users')">
+                        <i class="fas fa-users"></i> Quản lý người dùng
+                    </a>
+                    <a href="#" class="admin-nav-item" onclick="showAdminSection('reports')">
+                        <i class="fas fa-chart-bar"></i> Báo cáo thống kê
+                    </a>
+                    <a href="#" class="admin-nav-item" onclick="showAdminSection('salary')">
+                        <i class="fas fa-calculator"></i> Quyết toán lương
+                    </a>
+                    <a href="#" class="admin-nav-item" onclick="showAdminSection('devices')">
+                        <i class="fas fa-desktop"></i> Quản lý thiết bị
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Nội dung quản lý -->
+            <div class="admin-content">
+                <!-- Section 1: Đơn chờ duyệt -->
+                <section id="pendingSection" class="admin-section active">
+                    <h2><i class="fas fa-clock"></i> ĐƠN NGHỈ PHÉP CHỜ DUYỆT</h2>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="filterDept">Phòng ban:</label>
+                            <select id="filterDept" onchange="filterPendingRequests()">
+                                <option value="">Tất cả phòng ban</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterType">Loại nghỉ:</label>
+                            <select id="filterType" onchange="filterPendingRequests()">
+                                <option value="">Tất cả loại</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="pendingTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Nhân viên</th>
+                                    <th>Phòng ban</th>
+                                    <th>Loại nghỉ</th>
+                                    <th>Ngày nghỉ</th>
+                                    <th>Số ngày</th>
+                                    <th>Lý do</th>
+                                    <th>Liên hệ</th>
+                                    <th>Thiết bị đăng ký</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingBody">
+                                <!-- Dữ liệu sẽ được load -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Section 2: Tất cả đơn -->
+                <section id="allSection" class="admin-section">
+                    <h2><i class="fas fa-list"></i> TẤT CẢ ĐƠN NGHỈ PHÉP</h2>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <input type="month" id="allFilterMonth" onchange="loadAllRequests()">
+                        </div>
+                        <div class="filter-group">
+                            <select id="allFilterStatus" onchange="loadAllRequests()">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="Chờ duyệt">Chờ duyệt</option>
+                                <option value="Đã duyệt">Đã duyệt</option>
+                                <option value="Từ chối">Từ chối</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="allTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã đơn</th>
+                                    <th>Nhân viên</th>
+                                    <th>Loại nghỉ</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Từ ngày</th>
+                                    <th>Đến ngày</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người duyệt</th>
+                                    <th>Ngày duyệt</th>
+                                    <th>Thiết bị</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allBody">
+                                <!-- Dữ liệu sẽ được load -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Section 3: Quản lý người dùng -->
+                <section id="usersSection" class="admin-section">
+                    <h2><i class="fas fa-users"></i> QUẢN LÝ NGƯỜI DÙNG</h2>
+                    
+                    <div class="section-tools">
+                        <button onclick="showAddUserModal()" class="btn-add">
+                            <i class="fas fa-user-plus"></i> Thêm người dùng mới
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Họ và tên</th>
+                                    <th>Phòng ban</th>
+                                    <th>Chức vụ</th>
+                                    <th>Số ngày phép/năm</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thiết bị đăng ký</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersBody">
+                                <!-- Dữ liệu sẽ được load -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Section 4: Báo cáo thống kê -->
+                <section id="reportsSection" class="admin-section">
+                    <h2><i class="fas fa-chart-bar"></i> BÁO CÁO THỐNG KÊ</h2>
+                    
+                    <div class="report-controls">
+                        <select id="reportType" onchange="generateReport()">
+                            <option value="monthly">Theo tháng</option>
+                            <option value="department">Theo phòng ban</option>
+                            <option value="type">Theo loại nghỉ</option>
+                        </select>
+                        <input type="month" id="reportMonth" onchange="generateReport()">
+                        <button onclick="exportReport()" class="btn-export">
+                            <i class="fas fa-download"></i> Xuất báo cáo
+                        </button>
+                    </div>
+                    
+                    <div class="charts-container">
+                        <div class="chart-box">
+                            <h3>Tổng số ngày nghỉ theo tháng</h3>
+                            <canvas id="leaveChart"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Phân bố loại nghỉ phép</h3>
+                            <canvas id="typeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="report-summary">
+                        <div class="summary-card">
+                            <h4>Tổng số đơn</h4>
+                            <p id="totalRequests">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Số đơn đã duyệt</h4>
+                            <p id="approvedRequests">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Số đơn từ chối</h4>
+                            <p id="rejectedRequests">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Tổng ngày nghỉ</h4>
+                            <p id="totalLeaveDays">0</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Section 5: Quyết toán lương -->
+                <section id="salarySection" class="admin-section">
+                    <h2><i class="fas fa-calculator"></i> QUYẾT TOÁN TIỀN LƯƠNG</h2>
+                    
+                    <div class="salary-controls">
+                        <div class="input-group">
+                            <label for="salaryMonth">Tháng quyết toán:</label>
+                            <input type="month" id="salaryMonth" value="2024-01">
+                        </div>
+                        <button onclick="calculateSalary()" class="btn-calculate">
+                            <i class="fas fa-calculator"></i> Tính toán
+                        </button>
+                        <button onclick="exportSalary()" class="btn-export">
+                            <i class="fas fa-file-excel"></i> Xuất bảng lương
+                        </button>
+                    </div>
+                    
+                    <div class="salary-input-section">
+                        <h3>Nhập thông tin lương cơ bản</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="baseSalary">Lương cơ bản/tháng (VND)</label>
+                                <input type="number" id="baseSalary" value="10000000">
+                            </div>
+                            <div class="form-group">
+                                <label for="workDays">Số ngày công chuẩn</label>
+                                <input type="number" id="workDays" value="22">
+                            </div>
+                            <div class="form-group">
+                                <label for="salaryPerDay">Lương/ngày (tự động)</label>
+                                <input type="text" id="salaryPerDay" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="salaryTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã NV</th>
+                                    <th>Họ và tên</th>
+                                    <th>Phòng ban</th>
+                                    <th>Số ngày làm việc</th>
+                                    <th>Số ngày nghỉ</th>
+                                    <th>Lương cơ bản</th>
+                                    <th>Khấu trừ nghỉ</th>
+                                    <th>Thực lĩnh</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryBody">
+                                <!-- Dữ liệu sẽ được tính toán -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="8">TỔNG CỘNG</th>
+                                    <th id="totalSalary">0</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div class="export-options">
+                        <h3>Tạo file quyết toán tháng</h3>
+                        <div class="option-buttons">
+                            <button onclick="createMonthlyFile()" class="btn-save">
+                                <i class="fas fa-file-export"></i> Tạo file tháng này
+                            </button>
+                            <button onclick="viewMonthlyFiles()" class="btn-view">
+                                <i class="fas fa-folder-open"></i> Xem file các tháng
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Section 6: Quản lý thiết bị -->
+                <section id="devicesSection" class="admin-section">
+                    <h2><i class="fas fa-desktop"></i> QUẢN LÝ THIẾT BỊ ĐĂNG NHẬP</h2>
+                    
+                    <div class="table-container">
+                        <table id="devicesTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên người dùng</th>
+                                    <th>Địa chỉ MAC/IP</th>
+                                    <th>Thiết bị</th>
+                                    <th>Lần đăng nhập cuối</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="devicesBody">
+                                <!-- Dữ liệu sẽ được load -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="device-rules">
+                        <h3>Quy định đăng nhập thiết bị</h3>
+                        <ul>
+                            <li>Mỗi người dùng chỉ được đăng ký tối đa 2 thiết bị</li>
+                            <li>Thiết bị mới cần được quản lý phê duyệt</li>
+                            <li>Đăng nhập từ thiết bị lạ sẽ bị cảnh báo</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal duyệt đơn -->
+    <div id="approveModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3><i class="fas fa-check-circle"></i> DUYỆT ĐƠN NGHỈ PHÉP</h3>
+            
+            <div id="requestDetails" class="request-details">
+                <!-- Chi tiết đơn sẽ được hiển thị ở đây -->
+            </div>
+            
+            <div class="approval-actions">
+                <button onclick="approveRequest(true)" class="btn-approve">
+                    <i class="fas fa-check"></i> Phê duyệt
+                </button>
+                <button onclick="approveRequest(false)" class="btn-reject">
+                    <i class="fas fa-times"></i> Từ chối
+                </button>
+                <button onclick="closeModal()" class="btn-cancel">
+                    <i class="fas fa-times"></i> Hủy
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal thêm người dùng -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddUserModal()">&times;</span>
+            <h3><i class="fas fa-user-plus"></i> THÊM NGƯỜI DÙNG MỚI</h3>
+            
+            <form id="addUserForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="newUsername">Tên đăng nhập *</label>
+                        <input type="text" id="newUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu *</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newFullname">Họ và tên *</label>
+                        <input type="text" id="newFullname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDepartment">Phòng ban *</label>
+                        <select id="newDepartment" required>
+                            <option value="">Chọn phòng ban</option>
+                            <option value="Nhân sự">Nhân sự</option>
+                            <option value="Kế toán">Kế toán</option>
+                            <option value="Kinh doanh">Kinh doanh</option>
+                            <option value="Kỹ thuật">Kỹ thuật</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPosition">Chức vụ</label>
+                        <input type="text" id="newPosition">
+                    </div>
+                    <div class="form-group">
+                        <label for="newLeaveDays">Số ngày phép/năm</label>
+                        <input type="number" id="newLeaveDays" value="12">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newDevice">Thiết bị đăng ký (MAC/IP)</label>
+                    <input type="text" id="newDevice">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Lưu thông tin
+                    </button>
+                    <button type="button" onclick="closeAddUserModal()" class="btn-cancel">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal xem file -->
+    <div id="filesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFilesModal()">&times;</span>
+            <h3><i class="fas fa-folder-open"></i> FILE QUYẾT TOÁN CÁC THÁNG</h3>
+            
+            <div class="files-list">
+                <!-- Danh sách file sẽ được hiển thị ở đây -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
