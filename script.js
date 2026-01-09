@@ -1,10 +1,7 @@
 /// SCRIPT_URL sẽ tự động thay đổi dựa trên môi trường
 // SỬA LẠI PHẦN NÀY
-const SCRIPT_URL = window.location.hostname.includes('vercel.app') 
-  ? 'https://script.google.com/macros/s/AKfycbyd0HQnHTucW_QfiSutEmPQ0tH-gZJ3wm4VQSlh8Y3R/exec'  // Dùng trực tiếp Google Apps Script
-  : 'https://script.google.com/macros/s/AKfycbyd0HQnHTucW_QfiSutEmPQ0tH-gZJ3wm4VQSlh8Y3R/exec'; // Cả local và Vercel đều dùng chung
-console.log('Script URL:', SCRIPT_URL);
-console.log('Current host:', window.location.hostname);
+window.SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyd0HQnHTucW_QfiSutEmPQ0tH-gZJ3wm4VQSlh8Y3R/exec';
+console.log('Đã sửa SCRIPT_URL thành:', window.SCRIPT_URL);
 let currentUser = null;
 let currentPage = 1;
 let itemsPerPage = 10;
@@ -1542,3 +1539,4 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
