@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Untitled Project (fork) (fork)</title><meta name="title" content="Untitled Project (fork) (fork)"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><style id="__livecodes_styles__"></style><script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.js" async=""></script><script type="importmap">{
+  "imports": {}
+}</script></head><body>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thi Trắc Nghiệm TMTC 2026</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--card);
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 500;
+            background: #e0e7ff;
+            color: var(--primary-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border);
+            position: fixed;
+            top: 56px;
+            z-index: 99;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Container */
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Options */
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .option-btn.disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Bottom Navigation */
+        .nav-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .btn-prev {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .result-screen h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .score-box {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .score-label {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        /* Review Section */
+        .review-item {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+            border-left: 4px solid var(--danger);
+        }
+
+        .review-item.correct {
+            border-left-color: var(--success);
+        }
+
+        .review-q {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .review-ans {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .review-ans span {
+            font-weight: 600;
+        }
+
+        .review-ans.correct-ans span {
+            color: var(--success);
+        }
+
+        .review-ans.wrong-ans span {
+            color: var(--danger);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+
+
+
+    <!-- Header -->
+    <div class="header">
+        <h1>TMTC 2026</h1>
+        <div class="progress-text" id="progressText">Câu 1/60</div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Main Quiz Container -->
+    <div class="container" id="quizContainer">
+        <div class="question-card">
+            <div class="question-text" id="questionText"></div>
+            <div id="optionsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bottom" id="navBottom">
+        <button class="btn btn-prev" id="btnPrev" onclick="prevQuestion()" disabled="">Quay lại</button>
+        <button class="btn btn-next" id="btnNext" onclick="nextQuestion()">Tiếp theo</button>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="result-screen" id="resultScreen">
+        <h2>Kết quả bài thi</h2>
+        <div class="score-box">
+            <div class="score-number" id="scoreDisplay">0/60</div>
+            <div class="score-label">Số câu trả lời đúng</div>
+        </div>
+        <button class="btn btn-submit" onclick="restartQuiz()" style="width: 100%; margin-bottom: 20px;">Làm lại bài thi (Xáo trộn)</button>
+        <h3 style="text-align: left; margin-bottom: 15px;">Xem lại bài làm:</h3>
+        <div id="reviewContainer"></div>
+    </div>
+
+    <script>
+        // Dữ liệu 60 câu hỏi (Đã được trích xuất từ tài liệu)
+        const quizData = [
+            { q: "Đồng chí cho biết: Theo điều lệ công tác TMTC, tên kế hoạch A2 là gì?", o: ["Kế hoạch bảo vệ chế độ XHCN, bảo vệ an ninh chính trị.", "Kế hoạch bảo vệ an ninh chính trị, bảo vệ chế độ XHCN.", "Kế hoạch bảo vệ Đảng, bảo vệ Nhà nước Việt Nam XHCN.", "Kế hoạch bảo vệ Tổ quốc Việt Nam XHCN."], a: 1 },
+            { q: "Đồng chí cho biết: Theo điều lệ công tác TMTC, tên kế hoạch A3 là gì?", o: ["Kế hoạch bảo vệ biên giới, vùng trời, vùng biển trong sự nghiệp xây dựng và bảo vệ Tổ quốc Việt Nam XHCN.", "Kế hoạch bảo vệ biên giới Tổ quốc Việt Nam XHCN.", "Kế hoạch bảo vệ biên giới, vùng biển, vùng trời trong sự nghiệp xây dựng và bảo vệ Tổ quốc Việt Nam XHCN.", "Kế hoạch bảo vệ vùng biển, vùng trời trong sự nghiệp xây dựng và bảo vệ Tổ quốc Việt Nam XHCN."], a: 2 },
+            { q: "Đồng chí cho biết: Theo điều lệ công tác TMTC, tên kế hoạch A4 theo điều lệ công tác TMTC là gì?", o: ["Kế hoạch phòng tránh, đánh trả địch tiến công hỏa lực bảo vệ Tổ quốc Việt Nam XHCN.", "Kế hoạch phòng tránh, đánh đột nhập tiến công hỏa lực bảo vệ Tổ quốc Việt Nam XHCN.", "Kế hoạch đánh trả địch tiến công hỏa lực bảo vệ Tổ quốc Việt Nam XHCN.", "Kế hoạch đánh địch tiến công hỏa lực bảo vệ Tổ quốc Việt Nam XHCN."], a: 3 },
+            { q: "Đồng chí cho biết: Điều lệnh chiến đấu Trạm Ra đa Hải quân ra ngày tháng năm nào?", o: ["03/9/2019.", "03/9/2020.", "03/9/2021.", "03/9/2022."], a: 1 },
+            { q: "Đồng chí cho biết: Có mấy trạng thái sẵn sàng chiến đấu?", o: ["3.", "5.", "4.", "2."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh 28/CL-BTTM ngày 03/12/2012 của TTM T, xác định mục tiêu quyết giữ trong tác chiến bảo vệ biển, đảo là như thế nào?", o: ["Vùng đặc quyền kinh tế và thềm lục địa Việt Nam, khu vực 200 hải lý tính từ đường cơ sở; khu vực DK-I; 09 đảo nổi, 12 đảo chìm (33 điểm đảo) ta đang đóng giữ ở Trường Sa.", "Vùng đặc quyền kinh tế và thềm lục địa Việt Nam, khu vực 200 hải lý tính từ đường cơ sở; khu vực DK-I, DK-II; 33 điểm đảo ta đang đóng giữ ở Trường Sa.", "Vùng đặc quyền kinh tế và thềm lục địa Việt Nam, khu vực 200 hải lý tính từ đường cơ sở; Khu vực Tây đường trung tuyến Bờ-Bờ ở cửa Vịnh Bắc Bộ; Khu vực DK-I; 09 đảo nổi, 12 đảo chìm (33 điểm đảo) ta đang đóng giữ ở Trường Sa.", "Vùng đặc quyền kinh tế và thềm lục địa Việt Nam; Khu vực Tây đường trung tuyến Bờ-Bờ ở cửa Vịnh Bắc Bộ; 09 đảo nổi, 12 đảo chìm (33 điểm đảo) ta đang đóng giữ ở Trường Sa."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 của TTM T, phạm vi xử lý trong xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam là như thế nào?", o: ["Trên tất cả các vùng biển, đảo của nước CHXHCN Việt Nam.", "Trên các vùng biển, đảo thềm lục địa, vùng đặc quyền kinh tế của nước CHXHCN Việt Nam.", "Trên các vùng biển, đảo của nước CHXHCN Việt Nam (chủ yếu là các vùng biển ngoài lãnh hải của lãnh thổ đất liền).", "Trên các vùng biển, đảo của nước CHXHCN Việt Nam (tính từ đường cơ sở đến đường 200 hải lý)."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 của TTM T, lực lượng trực tiếp xử lý trong xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam gồm những lực lượng nào?", o: ["Hải quân, Cảnh Sát biển, Bộ đội Biên phòng; lực lượng tàu cá ngư dân địa phương được huy động.", "Hải quân, Cảnh Sát biển, Bộ đội Biên phòng, Bộ đội Đặc công lực lượng tàu cá ngư dân các địa phương ven biển huy động.", "Hải quân, Cảnh Sát biển, Bộ đội Biên phòng, các quân khu ven biển; lực lượng của các Bộ, Ngành, địa phương được huy động.", "Hải quân, Phòng không - Không quân, Cảnh Sát biển, Bộ đội Biên phòng, Bộ đội Đặc công, các quân khu ven biển; lực lượng của các Bộ, Ngành, địa phương được huy động."], a: 3 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 của TTMT, đối tượng xử lý trong xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam là gì?", o: ["Tàu, thuyền, giàn khoan, các phương tiện bay, lực lượng khác của NN xâm phạm, lấn chiếm biển, đảo và ngăn cản các hoạt động đấu khí của ta trên các vùng biển Việt Nam.", "Tàu, thuyền, giàn khoan, của NN xâm phạm, lấn chiếm biển, đảo và ngăn cản các hoạt động đấu khí của ta trên các vùng biển Việt Nam.", "Tàu, thuyền, giàn khoan, tàu thăm dò và các lực lượng khác của NN xâm phạm, chủ quyền các vùng biển, đảo và ngăn cản các hoạt động đấu khí của ta trên các vùng biển Việt Nam.", "Tàu, thuyền, giàn khoan, tàu thăm dò, tàu nghiên cứu biển, các phương tiện bay, lực lượng khác của NN xâm phạm, lấn chiếm biển, đảo thềm lục địa và vùng đặc quyền kinh tế của Việt Nam."], a: 0 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 của TTMT về xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam được thực hiện trong trạng thái Quốc phòng nào?", o: ["Khi đất nước chuyển vào trạng thái có tình huống.", "Trạng thái Quốc phòng thường xuyên.", "Khi chuyển trạng thái SSCĐ lên Cao, Toàn bộ.", "Khi chuyển trạng thái SSCĐ lên Tăng cường, Cao."], a: 1 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 của TTMT về xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam, quy định lực lượng nào là nòng cốt trong thực hiện nhiệm vụ bảo vệ chủ quyền, toàn vẹn lãnh thổ các vùng biển đảo của Tổ quốc?", o: ["Quân khu ven biển.", "Cảnh Sát biển.", "Hải quân.", "Bộ đội biên phòng."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 28/CL-BTTM ngày 03/12/2012 về xử trí các tình huống tác chiến bảo vệ các vùng biển, đảo Việt Nam, quy định ai được quyền ra lệnh cắt cáp thăm dò, phá phao năng của NN; Nổ súng đánh trả; Phá huỷ giàn khoan NN; Đóng giữ thêm bãi cạn không người ở Quân đảo Trường Sa?", o: ["Tư lệnh Hải quân hoặc Phó Tư lệnh - TMT (khi Tư lệnh đi vắng).", "Tổng Tham mưu trưởng.", "Phó Tổng Tham mưu trưởng phụ trách Tác chiến.", "Bộ trưởng BQP hoặc TTMT (khi Bộ trưởng đi vắng)."], a: 3 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021, tư tưởng chỉ đạo trong xử trí các tình huống tác chiến Phòng không là như thế nào?", o: ["Bảo vệ vững chắc chủ quyền vùng trời bất khả xâm phạm của Nước CHXHCN Việt Nam; ngăn chặn, kịp thời, chính xác, có hiệu quả trong mọi tình huống; không để các thế lực thù địch tạo cớ, gây diễn biến xấu về an ninh chính trị, thiệt hại tổn thất về kinh tế, đe dọa đến quốc phòng, an ninh của đất nước.", "Bảo vệ vững chắc vùng trời bất khả xâm phạm của Nước CHXHCN Việt Nam; ngăn chặn, kịp thời, chính xác, có hiệu quả, không để bị động, bất ngờ trong mọi tình huống; không để các thế lực thù địch, phản động gây diễn biến xấu về an ninh chính trị, đe dọa đến quốc phòng, an ninh.", "Kiên quyết bảo vệ vững chắc chủ quyền vùng trời bất khả xâm phạm của Nước CHXHCN Việt Nam; chủ động ngăn chặn, kịp thời xử lý chính xác, có hiệu quả, không để bị động, bất ngờ trong mọi tình huống; không để các thế lực thù địch, phản động tạo cớ, gây diễn biến xấu về an ninh chính trị, thiệt hại tổn thất về kinh tế, đe dọa đến quốc phòng, an ninh; giữ vững môi trường ổn định để xây dựng và phát triển đất nước.", "Kiên quyết bảo vệ vững chắc vùng trời của Nước CHXHCN Việt Nam; chủ động ngăn chặn, xử lý có hiệu quả trong mọi tình huống; không để các thế lực thù địch, phản động gây diễn biến xấu về an ninh chính trị, đe dọa đến quốc phòng, an ninh; giữ vững môi trường ổn định để xây dựng và phát triển đất nước."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021 về xử lý các tình huống tác chiến Phòng không được thực hiện trong trạng thái Quốc phòng nào?", o: ["Khi đất nước chuyển vào trạng thái có tình huống.", "Khi chuyển trạng thái SSCĐ lên Tăng cường, Cao.", "Khi chuyển trạng thái SSCĐ lên Cao, Toàn bộ.", "Trạng thái Quốc phòng thường xuyên."], a: 3 },
+            { q: "Đồng chí cho biết phạm vi áp dụng Chỉ lệnh số 750/CL-TM ngày 11/9/2021 về xử lý các tình huống tác chiến Phòng không?", o: ["Trong vùng trời Việt Nam, bao gồm: Vùng trời trên lãnh thổ đất liền; vùng trời trên vùng nội thủy và lãnh hải; vùng trời các đảo nổi (cả các đảo nổi thuộc quần đảo Trường Sa); vùng trời trên các đảo chìm, nhà giàn DKI, tàu quân sự của Việt Nam.", "Trong vùng trời Việt Nam, bao gồm: Vùng trời trên lãnh thổ đất liền; vùng trời trên các vùng biển của Việt Nam; vùng trời các đảo nổi (cả các đảo nổi thuộc quần đảo Trường Sa); vùng trời trên các đảo chìm, nhà giàn DKI, tàu quân sự của Việt Nam.", "Trong vùng trời Việt Nam, bao gồm: Vùng trời trên lãnh thổ đất liền; vùng trời trên vùng nội thủy, lãnh hải, vùng đặc quyền kinh tế và thềm lục địa; vùng trời các đảo nổi (cả các đảo nổi thuộc quần đảo Trường Sa); vùng trời trên các đảo chìm, nhà giàn DKI, tàu quân sự của Việt Nam.", "Trong vùng trời Việt Nam, bao gồm: Vùng trời trên lãnh thổ đất liền; vùng trời trên vùng nội thủy, lãnh hải, vùng đặc quyền kinh tế và thềm lục địa; vùng trời các đảo nổi (cả các đảo nổi thuộc quần đảo Trường Sa) của Việt Nam."], a: 0 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021, quy định lực lượng được giao xử lý các tình huống tác chiến Phòng không gồm những lực lượng nào?", o: ["Các đơn vị tổ chức quản lý, khai thác hoạt động bay, trong đó lực lượng Phòng không, Không quân và Phòng không Lục quân, Hải quân, Pháo binh, Cảnh sát biển giữ vai trò nòng cốt.", "Các đơn vị trong toàn quân và các cơ quan, đơn vị tổ chức quản lý, khai thác hoạt động bay, trong đó lực lượng Phòng không, Không quân và Phòng không Lục quân giữ vai trò nòng cốt.", "Các đơn vị trong toàn quân và các cơ quan, đơn vị tổ chức quản lý, khai thác hoạt động bay, trong đó lực lượng Phòng không, Không quân và Hải quân, Bộ đội biên phòng giữ vai trò nòng cốt.", "Các cơ quan, đơn vị tổ chức quản lý, khai thác hoạt động bay, trong đó lực lượng Phòng không, Không quân, Hải quân, Cảnh Sát biển và Phòng không Lục quân giữ vai trò nòng cốt."], a: 1 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021, khi phát hiện phương tiện bay có người lái vi phạm về chế độ bay. SCH, chỉ huy các đơn vị làm nhiệm vụ trực SSCĐ phải làm gì?", o: ["Kiểm tra dự báo, thông báo bay, báo động phòng không, báo cáo cấp trên đồng thời khẩn trương thông báo tình hình trên không cho SCH các đơn vị có liên quan biết để theo dõi, quản lý và sẵn sàng bắn tiêu diệt mục tiêu theo lệnh của SCH cấp trên.", "Nhanh chóng kiểm tra dự báo, thông báo bay; tổ chức báo động phòng không, đồng thời khẩn trường thông báo tình hình cho SCH các đơn vị có liên quan biết để sẵn sàng xử lý theo lệnh của SCH cấp trên.", "Nhanh chóng kiểm tra dự báo, thông báo bay, xác minh làm rõ hành động vi phạm; tổ chức báo động phòng không, báo cáo cấp trên đồng thời khẩn trương thông báo tình hình trên không cho SCH các đơn vị có liên quan biết để theo dõi, quản lý và sẵn sàng xử lý theo lệnh của SCH cấp trên.", "Kiểm tra dự báo, thông báo bay, tổ chức báo động phòng không và sẵn sàng tiêu diệt mục tiêu vi phạm theo lệnh của SCH cấp trên."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021, khi phát hiện phương tiện bay có người lái bay ngang qua điểm đóng quân hoặc lượn vòng quanh đảo nổi (trong phạm vi 12 hải lý trở vào); bay vòng quanh đảo chìm, nhà giàn ở cự ly 2.000 mét trở vào, ở độ cao 500m trở xuống. Người chỉ huy đơn vị phải làm gì?", o: ["Ra lệnh sử dụng thông tin, tín hiệu để cảnh báo, đồng thời chuẩn bị vũ khí sẵn sàng bắn hạ mục tiêu khi có lệnh.", "Ra lệnh dùng cờ tín hiệu, thông tin để cảnh báo, đồng thời sử dụng thiết bị ghi âm, ghi hình làm tư liệu đấu tranh và chuẩn bị vũ khí sẵn sàng bắn hạ mục tiêu khi có lệnh.", "Ra lệnh dùng loa tuyên truyền, tín hiệu, thông tin để cảnh báo, đồng thời sử dụng thiết bị ghi âm, ghi hình làm tư liệu đấu tranh và sẵn sàng sử dụng vũ khí bắn hạ mục tiêu khi có lệnh.", "Ra lệnh dùng loa tuyên truyền, cờ tín hiệu, thông tin để cảnh báo, đồng thời sử dụng thiết bị ghi âm, ghi hình làm tư liệu đấu tranh."], a: 3 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021 khi phát hiện tàu bay không người lái và phương tiện bay siêu nhẹ xâm phạm vùng trời. Các đơn vị phải làm gì?", o: ["Nhanh chóng xác minh thủ đoạn, hành động bay; báo động lực lượng trực phòng không, tác chiến điện tử, báo cáo người chỉ huy, thông báo cho các lực lượng có liên quan để quản lý theo dõi; sử dụng lực lượng chế áp UAV ép hạ cánh, thu phương tiện, phối hợp với lực lượng Công an địa phương xử lý theo quy định của pháp luật.", "Nhanh chóng xác minh thủ đoạn, hành động bay; báo động tác chiến điện tử, sử dụng lực lượng chế áp UAV ép hạ cánh, thu phương tiện, phối hợp với lực lượng Công an địa phương xử lý theo quy định của pháp luật.", "Nhanh chóng xác minh thủ đoạn, hành động bay; báo động lực lượng trực phòng không, tác chiến điện tử; sử dụng lực lượng chế áp UAV, thu phương tiện, phối hợp với lực lượng Công an địa phương xử lý theo quy định của pháp luật.", "Nhanh chóng xác minh thủ đoạn, hành động bay; báo động lực lượng trực phòng không, tác chiến điện tử, báo cáo người chỉ huy; sử dụng lực lượng chế áp UAV ép hạ cánh, thu phương tiện, bắt giữ người điều khiển, xử lý theo quy định của pháp luật."], a: 0 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021, khi phát hiện phương tiện bay cố tình bay vào khu cấm bay. Trường hợp nào sau đây được bắn cảnh cáo?", o: ["Máy bay HKDD bị không tặc, bị cướp; phương tiện bay có người lái vi phạm chế độ bay, xâm phạm vùng trời và không chấp hành huấn lệnh của máy bay bay chặn.", "Máy bay HKDD bị không tặc, bị cướp; phương tiện bay có người lái vi phạm chế độ bay, xâm phạm vùng trời và không chấp hành huấn lệnh của máy bay bay chặn; Máy bay vận tải và trực thăng quân sự không chở khách bị cướp có dấu hiệu cố tình bay vào khu cấm bay.", "Máy bay HKDD bị không tặc, bị cướp, vi phạm chế độ bay, xâm phạm vùng trời và không chấp hành huấn lệnh của máy bay bay chặn; Máy bay vận tải và trực thăng quân sự không chở khách bị cướp có dấu hiệu cố tình bay vào khu cấm bay.", "Máy bay HKDD vi phạm chế độ bay, xâm phạm vùng trời và không chấp hành huấn lệnh của máy bay bay chặn; Máy bay vận tải và trực thăng quân sự bị cướp có dấu hiệu cố tình bay vào khu cấm bay."], a: 1 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021 khi phát hiện phương tiện bay có tình bay vào khu cấm bay. Trường hợp nào được bắn tiêu diệt?", o: ["Các phương tiện bay đã bắn cảnh cáo nhưng cố tình bay vào khu cấm bay; Máy bay quân sự các loại bị cướp (kể cả máy bay vận tải và trực thăng quân sự không chở khách bị cướp bay vào khu vực cấm bay).", "Các phương tiện bay đã bắn cảnh cáo nhưng không chấp hành và phương tiện bay siêu nhẹ cố tình bay vào khu cấm bay; Máy bay trực thăng quân sự không chở khách bị cướp bay vào khu vực cấm bay.", "Các phương tiện bay (có người lái) đã bắn cảnh cáo nhưng không chấp hành; Tàu bay không người lái và phương tiện bay siêu nhẹ cố tình bay vào khu cấm bay; Máy bay quân sự các loại bị cướp (kể cả máy bay vận tải và trực thăng quân sự không chở khách bị cướp bay vào khu vực cấm bay).", "Phương tiện bay có người lái, không người lái và phương tiện bay siêu nhẹ đã bắn cảnh cáo nhưng không chấp hành; Máy bay quân sự các loại bị cướp (kể cả máy bay vận tải và trực thăng quân sự không chở khách bị cướp bay vào khu vực cấm bay)."], a: 2 },
+            { q: "Đồng chí cho biết: Theo Chỉ lệnh số 750/CL-TM ngày 11/9/2021. Trường hợp nào sau đây không được bắn?", o: ["Các phương tiện bay có người lái, không người lái, phương tiện bay siêu nhẹ xâm phạm vùng trời nhưng có dấu hiệu: Thả càng, lắc cánh, sử dụng các ký, tín hiệu liên lạc xin hạ cánh khẩn cấp; Máy bay HKDD, máy bay vận tải và trực thăng quân sự đang chở khách bị không tặc.", "Các phương tiện bay có người lái, không người lái xâm phạm vùng trời nhưng có dấu hiệu: Thả càng, lắc cánh, sử dụng các ký, tín hiệu liên lạc xin hạ cánh khẩn cấp; Máy bay HKDD đang chở khách bị không tặc.", "Các phương tiện bay xâm phạm vùng trời nhưng có dấu hiệu: Thả càng, lắc cánh, sử dụng các ký, tín hiệu liên lạc xin hạ cánh khẩn cấp; Máy bay HKDD, máy bay vận tải quân sự đang chở khách bị không tặc.", "Các phương tiện bay có người lái xâm phạm vùng trời nhưng có dấu hiệu: Thả càng, lắc cánh, sử dụng các ký, tín hiệu liên lạc xin hạ cánh khẩn cấp; Máy bay HKDD, máy bay vận tải và trực thăng quân sự đang chở khách bị không tặc."], a: 3 },
+            { q: "Đồng chí cho biết: Sở chỉ huy BTL Hải quân chiến khu phía Nam Trung Quốc hiện đóng ở đâu?", o: ["Trạm Giang.", "Quảng Châu.", "Du Lâm.", "Hải Khẩu."], a: 0 },
+            { q: "Đồng chí cho biết: Căn cứ Vịnh Á Long là căn cứ dùng cho loại tàu nào?", o: ["Căn cứ tàu mặt nước.", "Căn cứ tàu mặt nước và tàu ngầm hạt nhân.", "Căn cứ tàu mặt nước và tàu ngầm thông thường.", "Căn cứ tàu ngầm thông thường."], a: 1 },
+            { q: "Đồng chí cho biết: Tàu ngầm Kilo của Hải quân chiến khu phía Nam bố trí tại đâu?", o: ["Trạm Giang.", "Hạ Xuyên.", "Du Lâm.", "Phú Lâm."], a: 2 },
+            { q: "Đồng chí cho biết: Hệ thống nhà chứa máy bay trên mỗi sân bay của Trung Quốc tại Xu Bi, Chữ Thập, Vành Khăn có thể chứa bao nhiêu máy bay?", o: ["36 máy bay chiến đấu.", "24 máy bay chiến đấu.", "30 máy bay chiến đấu.", "40 máy bay chiến đấu."], a: 1 },
+            { q: "Đồng chí cho biết: Mục đích của Trung Quốc khi triển khai tàu cá Dân binh tại quần đảo Trường Sa là gì?", o: ["Chỉ huy lực lượng tàu cá dân sự.", "Xác lập vùng đánh cá truyền thống.", "Khẳng định chủ quyền.", "Hỗ trợ hoạt động cho lực lượng quân sự TQ tại QĐTS."], a: 3 },
+            { q: "Đồng chí cho biết: Trung Quốc duy trì lực lượng tàu cá dân sự hoạt động tại QĐTS nhằm mục đích gì?", o: ["Duy trì hiện diện (ít đánh bắt) để “khẳng định yêu sách chủ quyền”.", "Tăng cường khai thác hải sản tại khu vực.", "Hỗ trợ lực lượng tàu cá dân binh.", "Xác lập vùng đánh cá truyền thống."], a: 0 },
+            { q: "Đồng chí cho biết: Trung Quốc trình công hàm về “yêu sách Tứ Sa” lên Tổng thư ký LHQ khi nào?", o: ["Tháng 3/2020.", "Tháng 12/2019.", "Tháng 12/2018.", "Tháng 3/2019."], a: 1 },
+            { q: "Đồng chí cho biết: Tàu Hải cảnh/TQ mang số hiệu 4 số (ví dụ: HC-5310) có ý nghĩa như thế nào?", o: ["Tàu thuộc các địa phương.", "Tàu Hải cảnh cấp khu vực.", "Tàu thuộc các Chiến khu.", "Tàu thuộc các Hạm đội."], a: 1 },
+            { q: "Đồng chí cho biết: Hai số đầu tiên trong ký hiệu tàu Hải cảnh/TQ 5 số (ví dụ: HC-31239) có ý nghĩa như thế nào?", o: ["Lượng giãn nước.", "Năm hạ thủy.", "Ký hiệu mã tỉnh.", "Ký hiệu phân Cục."], a: 2 },
+            { q: "Đồng chí cho biết: Theo hướng dẫn công tác TMTC năm 2025, khi có các sự kiện quan trọng của đất nước; dịp lễ, tết các đơn vị phải làm gì?", o: ["Tổ chức trực trước và sau 1 ngày hoặc theo kế hoạch, điện chỉ đạo của Quân chủng.", "Tổ chức trực trước và sau 2 ngày hoặc theo kế hoạch, điện chỉ đạo của Quân chủng.", "Tổ chức trực trước và sau 0,5 ngày hoặc theo kế hoạch, điện chỉ đạo của Quân chủng.", "Tổ chức trực trước và sau 1 ngày."], a: 0 },
+            { q: "Đồng chí cho biết: Khi tổ chức diễn tập các đơn vị xây dựng, sử dụng văn kiện nào?", o: ["Sử dụng văn kiện tác chiến thật làm văn kiện diễn tập.", "Xây dựng bộ văn kiện diễn tập.", "Xây dựng văn kiện tập kết hợp với văn kiện thật.", "Chỉ làm kế hoạch diễn tập còn lại dùng văn kiện thật."], a: 1 },
+            { q: "Đồng chí cho biết: Luật Biển Việt Nam được Chủ tịch nước công bố năm nào?", o: ["Năm 2010.", "Năm 2013.", "Năm 2012.", "Năm 2011."], a: 2 },
+            { q: "Đồng chí cho biết: Tổng số nhà giàn DKI do HQVN đang đóng giữ gồm bao nhiêu nhà giàn?", o: ["17 nhà giàn.", "20 nhà giàn.", "21 nhà giàn.", "15 nhà giàn."], a: 3 },
+            { q: "Đồng chí cho biết: Cấp nào phải xây dựng kế hoạch chuyển TTSSCĐ?", o: ["Đại đội và tương đương trở lên.", "Trung đoàn và tương đương trở lên.", "Tiểu đoàn và tương đương trở lên.", "Lữ đoàn và tương đương trở lên."], a: 0 },
+            { q: "Đồng chí cho biết: Các đảo thuộc quần đảo Trường Sa mà HQND Việt Nam đang đóng, giữ có bao nhiêu đảo cấp 1?", o: ["06 đảo.", "07 đảo.", "08 đảo.", "09 đảo."], a: 1 },
+            { q: "Đồng chí cho biết: Khi có tình huống liên quan đến ANCT-TTATXH trên địa bàn đóng quân người chỉ huy được sử dụng lực lượng như thế nào?", o: ["Sử dụng lực lượng tham gia xử lý tình huống khi có đề nghị của địa phương nơi đóng quân.", "Sử dụng lực lượng tham gia xử lý tình huống trước báo cáo cấp trên sau.", "Sử dụng lực lượng tham gia xử lý tình huống khi có lệnh của Bộ trưởng BQP hoặc TTMT.", "Sử dụng lực lượng tham gia xử lý tình huống đồng thời báo cáo cấp trên."], a: 2 },
+            { q: "Đồng chí cho biết: Đường phân định Vịnh Bắc Bộ giữa Việt Nam - Trung Quốc bao gồm bao nhiêu điểm?", o: ["20 điểm.", "22 điểm.", "19 điểm.", "21 điểm."], a: 3 },
+            { q: "Đồng chí cho biết: Đường cơ sở để tính chiều rộng lãnh hải của Việt Nam công bố năm 1982 gồm bao nhiêu điểm?", o: ["10 điểm.", "11 điểm.", "12 điểm.", "14 điểm."], a: 2 },
+            { q: "Đồng chí cho biết: Đường phân định Vịnh Bắc Bộ giữa Việt Nam-Trung Quốc ký năm nào?", o: ["Năm 1999.", "Năm 2001.", "Năm 2002.", "Năm 2000."], a: 3 },
+            { q: "Đồng chí cho biết: Trung Quốc hiện nay đóng giữ trái phép bao nhiêu đảo tại Quần đảo Trường Sa?", o: ["06 đảo.", "07 đảo.", "08 đảo.", "09 đảo."], a: 1 },
+            { q: "Đồng chí cho biết: Hiện nay có bao nhiêu nước? bao nhiêu bên có yêu sách về chủ quyền tại Quần đảo Trường Sa?", o: ["4 nước, 5 bên.", "3 nước, 4 bên.", "5 nước, 6 bên.", "4 nước, 4 bên."], a: 2 },
+            { q: "Đồng chí cho biết: Quần đảo Trường Sa được giải phóng ngày, tháng, năm nào?", o: ["Ngày 26/4/1975.", "Ngày 30/4/1975.", "Ngày 27/4/1975.", "Ngày 29/4/1975."], a: 3 },
+            { q: "Đồng chí cho biết: Các thành phần của Tác chiến điện tử?", o: ["Trinh sát điện tử; Tiến công điện tử; Bảo vệ điện tử.", "Trinh sát điện tử; Chế áp điện tử; Bảo vệ điện tử.", "Trinh sát điện tử; Tiến công điện tử; Chế áp điện tử.", "Dò tìm mạng điện tử; Tiến công điện tử; Bảo vệ điện tử."], a: 0 },
+            { q: "Đồng chí cho biết: Nhiệm vụ trọng tâm công tác TMTC năm 2026?", o: ["Tiếp tục xây dựng cơ quan Tham mưu “3 giỏi”, “3 mạnh” (Giỏi nắm tình hình, giỏi tham mưu đề xuất, giỏi tổ chức thực hiện. Mạnh chỉ đạo hướng dẫn; mạnh phối hợp hiệp đồng; mạnh kiểm tra, đánh giá).", "Tiếp tục xây dựng cơ quan Tham mưu “3 giỏi”, “3 mạnh” (Giỏi nắm tình hình, giỏi tham mưu đề xuất, giỏi tổ chức thực hiện. Mạnh chỉ đạo hướng dẫn; mạnh phối hợp hiệp đồng; mạnh kiểm tra).", "Tiếp tục xây dựng cơ quan Tham mưu các cấp “3 giỏi”, “3 mạnh” (Giỏi nắm tình hình, giỏi tham mưu đề xuất, giỏi tổ chức thực hiện. Mạnh chỉ đạo hướng dẫn; mạnh phối hợp hiệp đồng; mạnh kiểm tra, đánh giá).", "Tiếp tục xây dựng cơ quan Tham mưu “3 giỏi”, “3 mạnh” (Giỏi nắm tình hình, giỏi tham mưu đề xuất, giỏi tổ chức thực hiện. Mạnh chỉ đạo hướng dẫn; mạnh phối hợp hiệp đồng; mạnh đánh giá)."], a: 2 },
+            { q: "Đồng chí cho biết: Nhiệm vụ đột phá công tác TMTC năm 2026?", o: ["Công tác Tác chiến: “Nâng cao chất lượng xây dựng văn kiện, đổi mới nội dung và phương pháp tổ chức diễn tập”.", "Công tác Tác chiến: “Nâng cao chất lượng xây dựng văn kiện và đổi mới nội dung, phương pháp diễn tập”.", "Công tác Tác chiến: “Nâng cao chất lượng xây dựng văn kiện và đổi mới phương pháp tổ chức diễn tập”.", "Công tác Tác chiến: “Nâng cao chất lượng xây dựng văn kiện và đổi mới nội dung, phương pháp tổ chức diễn tập”."], a: 3 },
+            { q: "Đ/c cho biết trực SSCĐ Phòng không được quy định theo mấy cấp? Gồm những cấp nào?", o: ["2 (Cấp 2: Lực lượng trực theo trạng thái SSCĐ tăng cường; Cấp 1: Lực lượng trực theo trạng thái SSCĐ cao, toàn bộ).", "4 (Cấp 4: Lực lượng trực theo trạng thái SSCĐ thường xuyên; Cấp 3: Lực lượng trực theo trạng thái SSCĐ tăng cường; Cấp 2: Lực lượng trực theo trạng thái SSCĐ cao; Cấp 1: Lực lượng trực theo trạng thái SSCĐ toàn bộ).", "3 (Cấp 3: Lực lượng trực theo trạng thái SSCĐ thường xuyên; Cấp 2: Lực lượng trực theo trạng thái SSCĐ tăng cường; Cấp 1: Lực lượng trực theo trạng thái SSCĐ cao, toàn bộ).", "Cả 3 đáp án trên đều sai."], a: 2 },
+            { q: "Đ/c cho biết Trực ban chiến đấu Phòng không thời gian chuyển cấp 2 lên cấp 1 là bao nhiêu?", o: ["Thời gian chuyển từ cấp 2 lên cấp 1 đối với PPK và SMPK: ban ngày = 1 phút 30 giây, ban đêm = 2 phút 30 giây, phải bắn được.", "Thời gian chuyển từ cấp 2 lên cấp 1 đối với PPK và SMPK: ban ngày = 1 phút, ban đêm = 1 phút 30 giây, phải bắn được.", "Thời gian chuyển từ cấp 2 lên cấp 1 đối với PPK và SMPK: ban ngày = 1 phút, ban đêm = 2 phút, phải bắn được.", "Cả 3 đáp án trên đều sai."], a: 1 },
+            { q: "Đ/c cho biết đơn vị đồng chí duy trì thành phần trực SSCĐ như thế nào?", o: ["Trực chỉ huy ở doanh trại, Trực chỉ huy khu A, Trực ban nội vụ, Trực Ra đa, Thông tin, Máy nổ, Quan sát mắt.", "Trực chỉ huy ở doanh trại, Trực chỉ huy khu A, Trực ban nội vụ, Trực Ra đa, Thông tin, Máy nổ.", "Trực chỉ huy ở doanh trại, Trực chỉ huy khu A, Trực ban nội vụ, Trực Ra đa, Thông tin, Máy nổ, Quan sát mắt, Trực PK.", "Cả 3 đáp án trên đều sai."], a: 0 },
+            { q: "Đ/c cho biết định mức báo động ra đa (mạng VTĐ) từ TTC1 xuống trạm Ra đa?", o: ["Dưới 12 phút đạt Giỏi; 12-17 phút đạt Khá; 17-22 phút ĐYC; trên 22 phút không ĐYC.", "Dưới 11 phút đạt Giỏi; 11-16 phút đạt Khá; 16-21 phút ĐYC; trên 21 phút không ĐYC.", "Dưới 10 phút đạt Giỏi; 10-15 phút đạt Khá; 15-20 phút ĐYC; trên 20 phút không ĐYC.", "Cả 3 đáp án trên đều sai."], a: 0 },
+            { q: "Đ/c cho biết định mức báo động ra đa (mạng HTĐ) từ TTC1 xuống trạm Ra đa?", o: ["Dưới 10 phút đạt Giỏi; 10-16 phút đạt Khá; 16-22 phút ĐYC; trên 22 phút không ĐYC.", "Dưới 10 phút đạt Giỏi; 10-15 phút đạt Khá; 15-20 phút ĐYC; trên 20 phút không ĐYC.", "Dưới 11 phút đạt Giỏi; 11-16 phút đạt Khá; 16-21 phút ĐYC; trên 21 phút không ĐYC.", "Cả 3 đáp án trên đều sai."], a: 1 },
+            { q: "Đ/c cho biết tín hiệu kèng báo động phòng chống cháy nổ?", o: ["01 hồi ngắn + 2 tiếng liên tục (trong vòng 1 phút)", "01 hồi dài + 3 tiếng liên tục (trong vòng 1 phút)", "01 hồi ngắn + 3 tiếng liên tục (trong vòng 1 phút)", "Cả 3 đáp án trên đều sai."], a: 2 },
+            { q: "Đ/c cho biết số lượng đạn trực SSCĐ Phòng không và bố trí ra sao, theo hướng dẫn trực SSCĐ PK năm 2018?", o: ["Đạn 0,25 cơ số/khẩu, 3 hộp tiếp đạn, mỗi hộp 25 viên, để trong bao xe, đeo vào người (không lắp đạn vào súng), chỉ lắp vào súng hộp tiếp đạn không có đạn. Khi có lệnh mới lắp hộp tiếp đạn vào súng.", "Đạn 0,25 cơ số/khẩu, 3 hộp tiếp đạn, mỗi hộp 20 viên, để trong bao xe, đeo vào người (không lắp đạn vào súng), chỉ lắp vào súng hộp tiếp đạn không có đạn. Khi có lệnh mới lắp hộp tiếp đạn vào súng.", "Đạn 0,25 cơ số/khẩu, 4 hộp tiếp đạn, mỗi hộp 25 viên, để trong bao xe, đeo vào người (không lắp đạn vào súng), chỉ lắp vào súng hộp tiếp đạn không có đạn. Khi có lệnh mới lắp hộp tiếp đạn vào súng.", "Cả 3 đáp án trên đều sai."], a: 0 },
+            { q: "Đ/c cho biết Quyền ra lệnh mở máy Ra đa tăng cường, đột xuất.", o: ["Trực chỉ huy QCHQ, trực chỉ huy Vùng Hải quân, trực chỉ huy Tổng trạm ra đa, trực chỉ huy Trung đoàn ra đa, trực chỉ huy CM trạm ra đa.", "Trực chỉ huy QCHQ, trực chỉ huy Vùng Hải quân, trực chỉ huy Tổng trạm ra đa, trực chỉ huy Trung đoàn ra đa, trực chỉ huy trạm ra đa.", "Trực chỉ huy QCHQ, trực chỉ huy Vùng Hải quân, trực chỉ huy Tổng trạm ra đa, Trung đoàn trưởng, Trạm trưởng trạm ra đa.", "Cả 3 đáp án trên đều sai."], a: 0 },
+            { q: "Đ/c cho biết Thực hiện “4 được” trong đánh địch đột nhập đường không theo hướng dẫn Về việc tổ chức trực sẵn sàng chiến đấu Phòng không?", o: ["Quan sát được; thông báo, báo động được; bắn được; tiêu diệt được, bảo vệ an toàn mục tiêu.", "Quan sát phát hiện được; thông báo được; bắn được; tiêu diệt được, bảo vệ an toàn mục tiêu.", "Quan sát phát hiện được; thông báo, báo động được; bắn được; tiêu diệt được, bảo vệ an toàn mục tiêu.", "Cả 3 đáp án trên đều sai."], a: 2 },
+            { q: "Đ/c cho biết tổ cơ động có nhiệm vụ gì trong xử lý phương án “Phòng chống gây rối bạo loạn (A2)”.", o: ["Cơ động ra vị trí phân công để nhận nhiệm vụ; không cho trường hợp nào vượt cổng, tường, rào vào đơn vị.", "Cơ động ra vị trí phân công để nhận nhiệm vụ của chỉ huy; không cho trường hợp nào vượt cổng, tường, rào vào đơn vị.", "Cơ động ra vị trí phân công để nhận nhiệm vụ của chỉ huy; không cho trường hợp nào vượt cổng vào đơn vị.", "Cả 3 đáp án trên đều sai."], a: 1 },
+            { q: "Thời gian trực SSCĐ cao điểm bảo vệ Chiến thắng 30/4, Quốc tế 01/5?", o: ["Từ 18.00 ngày 29/4/2026 đến 06.00 ngày 02/5/2026.", "Từ 06.00 ngày 29/4/2026 đến 06.00 ngày 02/5/2026.", "Từ 06.00 ngày 29/4/2026 đến 18.00 ngày 02/5/2026.", "Cả 3 đáp án trên đều sai."], a: 2 },
+            { q: "Thời gian trực SSCĐ bảo vệ Đại hội Đại biểu toàn quốc lần thứ XIV của Đảng?", o: ["Từ 06.00 ngày 14/01/2026 đến 18.00 ngày 30/01/2026.", "Từ 06.00 ngày 14/01/2026 đến 24.00 ngày 30/01/2026.", "Từ 06.00 ngày 15/01/2026 đến 18.00 ngày 31/01/2026.", "Cả 3 đáp án trên đều sai."], a: 1 },
+            { q: "Thời gian trực SSCĐ bảo vệ Lễ đón nhận danh hiệu Anh hùng LLVT lần thứ 3 của Quân chủng Hải quân?", o: ["Từ 06.00 ngày 27/2/2026 đến 18.00 ngày 01/3/2026.", "Từ 18.00 ngày 27/2/2026 đến 06.00 ngày 01/3/2026.", "Từ 06.00 ngày 27/2/2026 đến 24.00 ngày 01/3/2026.", "Cả 3 đáp án trên đều sai."], a: 1 }
+        ];
+
+        // Biến trạng thái
+        let shuffledQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = []; // Lưu index của đáp án người dùng chọn
+        let isSubmitted = false;
+
+        // Hàm xáo trộn mảng (Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Khởi tạo bài thi
+        function initQuiz() {
+            shuffledQuestions = shuffleArray([...quizData]);
+            currentIndex = 0;
+            userAnswers = new Array(shuffledQuestions.length).fill(null);
+            isSubmitted = false;
+            
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('navBottom').style.display = 'flex';
+            
+            renderQuestion();
+        }
+
+        // Hiển thị câu hỏi
+        function renderQuestion() {
+            const question = shuffledQuestions[currentIndex];
+            const container = document.getElementById('quizContainer');
+            const optionsContainer = document.getElementById('optionsContainer');
+            
+            // Cập nhật tiến độ
+            document.getElementById('progressText').innerText = `Câu ${currentIndex + 1}/${shuffledQuestions.length}`;
+            document.getElementById('progressBar').style.width = `${((currentIndex + 1) / shuffledQuestions.length) * 100}%`;
+
+            // Hiển thị câu hỏi
+            document.getElementById('questionText').innerText = `Câu ${currentIndex + 1}: ${question.q}`;
+            
+            // Hiển thị đáp án
+            optionsContainer.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            question.o.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                if (userAnswers[currentIndex] === index) {
+                    btn.classList.add('selected');
+                }
+                btn.innerHTML = `<strong>${labels[index]}.</strong> ${option}`;
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Cập nhật nút điều hướng
+            document.getElementById('btnPrev').disabled = currentIndex === 0;
+            
+            const btnNext = document.getElementById('btnNext');
+            if (currentIndex === shuffledQuestions.length - 1) {
+                btnNext.innerText = 'Hoàn thành';
+                btnNext.className = 'btn btn-submit';
+            } else {
+                btnNext.innerText = 'Tiếp theo';
+                btnNext.className = 'btn btn-next';
+            }
+        }
+
+        // Chọn đáp án
+        function selectOption(optionIndex) {
+            if (isSubmitted) return;
+            
+            userAnswers[currentIndex] = optionIndex;
+            
+            // Cập nhật UI
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === optionIndex) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        // Câu tiếp theo
+        function nextQuestion() {
+            if (currentIndex < shuffledQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        // Câu trước đó
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        // Nộp bài
+        function submitQuiz() {
+            isSubmitted = true;
+            let score = 0;
+            
+            // Tính điểm
+            shuffledQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.a) {
+                    score++;
+                }
+            });
+
+            // Hiển thị màn hình kết quả
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('navBottom').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            
+            document.getElementById('scoreDisplay').innerText = `${score}/${shuffledQuestions.length}`;
+
+            // Tạo phần xem lại
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+
+            shuffledQuestions.forEach((q, index) => {
+                const isCorrect = userAnswers[index] === q.a;
+                const reviewItem = document.createElement('div');
+                reviewItem.className = `review-item ${isCorrect ? 'correct' : ''}`;
+                
+                let userAnswerText = userAnswers[index] !== null ? `${labels[userAnswers[index]]}. ${q.o[userAnswers[index]]}` : 'Chưa trả lời';
+                let correctAnswerText = `${labels[q.a]}. ${q.o[q.a]}`;
+
+                reviewItem.innerHTML = `
+                    <div class="review-q">Câu ${index + 1}: ${q.q}</div>
+                    <div class="review-ans ${isCorrect ? 'correct-ans' : 'wrong-ans'}">Bạn chọn: <span>${userAnswerText}</span></div>
+                    ${!isCorrect ? `<div class="review-ans correct-ans">Đáp án đúng: <span>${correctAnswerText}</span></div>` : ''}
+                `;
+                reviewContainer.appendChild(reviewItem);
+            });
+
+            // Cuộn lên đầu trang
+            window.scrollTo(0, 0);
+        }
+
+        // Làm lại bài
+        function restartQuiz() {
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Bắt đầu khi tải trang
+        window.onload = initQuiz;
+
+    </script>
+
+<script></script></body></html>
